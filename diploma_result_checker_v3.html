@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BTEB Result — Diploma in Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=Noto+Serif+Bengali:wght@400;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0C2340;
+  --navy-mid:#185FA5;
+  --navy-light:#E6F1FB;
+  --gold:#B8860B;
+  --gold-light:#FDF6E3;
+  --green:#0F6E56;
+  --green-light:#E1F5EE;
+  --red:#791F1F;
+  --red-light:#FCEBEB;
+  --border:#E2E4E8;
+  --text:#1A1F2E;
+  --text-muted:#6B7280;
+  --bg:#F7F8FA;
+  --white:#FFFFFF;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem;}
+
+/* ===== SEARCH SECTION ===== */
+.page-center{max-width:520px;margin:0 auto;}
+
+.logo-block{text-align:center;margin-bottom:2rem;}
+.crest{width:68px;height:68px;margin:0 auto 14px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.crest svg{width:36px;height:36px;fill:none;stroke:#fff;stroke-width:1.5;}
+.logo-block h1{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--navy);letter-spacing:0.01em;line-height:1.3;}
+.logo-block p{font-size:13px;color:var(--text-muted);margin-top:4px;letter-spacing:0.02em;}
+
+.search-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:0 2px 24px rgba(12,35,64,0.07);}
+.search-card h2{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--navy);margin-bottom:1.5rem;display:flex;align-items:center;gap:8px;}
+.search-card h2::before{content:'';display:inline-block;width:3px;height:18px;background:var(--navy-mid);border-radius:2px;}
+
+.field-group{margin-bottom:14px;}
+.field-group label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;}
+.field-group select,.field-group input{
+  width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:10px;
+  font-size:14px;font-family:var(--sans);color:var(--text);background:var(--bg);
+  transition:border-color .15s,box-shadow .15s;appearance:none;
+}
+.field-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+.field-group select:focus,.field-group input:focus{outline:none;border-color:var(--navy-mid);box-shadow:0 0 0 3px rgba(24,95,165,0.12);background:var(--white);}
+
+.btn-check{width:100%;padding:13px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;letter-spacing:0.02em;margin-top:6px;transition:background .15s,transform .1s;}
+.btn-check:hover{background:#0C447C;}
+.btn-check:active{transform:scale(0.99);}
+.btn-check:disabled{background:#B0BAC6;cursor:not-allowed;transform:none;}
+
+.spinner-inline{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:-2px;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.err-box{margin-top:12px;background:#FCEBEB;border:1px solid #F7C1C1;border-radius:10px;padding:11px 14px;font-size:13px;color:#791F1F;display:none;}
+
+/* ===== MARKSHEET ===== */
+.marksheet-wrap{max-width:760px;margin:2.5rem auto 0;}
+
+.action-bar{display:flex;gap:10px;justify-content:flex-end;margin-bottom:14px;}
+.action-bar button{padding:9px 18px;border-radius:9px;font-size:13px;font-weight:500;font-family:var(--sans);cursor:pointer;transition:background .15s;}
+.btn-new{background:var(--white);border:1px solid var(--border);color:var(--text);}
+.btn-new:hover{background:var(--bg);}
+.btn-dl{background:var(--navy);border:1px solid var(--navy);color:#fff;}
+.btn-dl:hover{background:#0C447C;}
+.btn-dl:disabled{background:#B0BAC6;border-color:#B0BAC6;cursor:not-allowed;}
+
+/* THE MARKSHEET DOCUMENT */
+#marksheet{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 32px rgba(12,35,64,0.09);
+  font-family:var(--sans);
+}
+
+.ms-head{
+  background:var(--navy);
+  padding:2rem 2.5rem 1.8rem;
+  text-align:center;
+  position:relative;
+}
+.ms-head::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,#B8860B 0%,#FFD700 40%,#B8860B 100%);
+}
+.ms-head-inner{display:flex;align-items:center;justify-content:center;gap:20px;}
+.ms-seal{width:64px;height:64px;border-radius:50%;border:2px solid rgba(184,134,11,0.6);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ms-seal svg{width:34px;height:34px;fill:none;stroke:#FFD700;stroke-width:1.5;}
+.ms-head-text{}
+.ms-board-name{font-family:var(--serif);font-size:19px;font-weight:700;color:#fff;letter-spacing:0.015em;line-height:1.2;}
+.ms-doc-title{font-size:11px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;}
+.ms-doc-label{
+  display:inline-block;margin-top:10px;
+  background:rgba(184,134,11,0.2);border:1px solid rgba(184,134,11,0.4);
+  color:#FFD700;font-size:12px;font-weight:600;letter-spacing:0.08em;
+  padding:4px 16px;border-radius:20px;text-transform:uppercase;
+}
+
+.ms-body{padding:1.75rem 2.5rem;}
+
+.student-band{display:flex;align-items:center;gap:16px;padding-bottom:1.5rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;}
+.stu-avatar{width:58px;height:58px;border-radius:50%;background:var(--navy-light);border:2px solid var(--navy-mid);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:20px;font-weight:700;color:var(--navy);flex-shrink:0;}
+.stu-name{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--navy);line-height:1.2;}
+.stu-sub{font-size:13px;color:var(--text-muted);margin-top:3px;}
+
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
+.info-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.info-box-lbl{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;}
+.info-box-val{font-size:14px;font-weight:600;color:var(--navy);}
+
+.summary-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.75rem;}
+.metric-cell{padding:16px;text-align:center;border-right:1px solid var(--border);}
+.metric-cell:last-child{border-right:none;}
+.mc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:6px;}
+.mc-val{font-family:var(--serif);font-size:28px;font-weight:700;line-height:1;}
+.mc-val.gpa{color:var(--navy-mid);}
+.mc-val.pass{color:var(--green);}
+.mc-val.fail{color:var(--red);}
+.mc-sub{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+
+.ms-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1.75rem;}
+.ms-table thead tr{background:var(--navy);}
+.ms-table thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.8);}
+.ms-table tbody tr{border-bottom:1px solid var(--border);}
+.ms-table tbody tr:last-child{border-bottom:none;}
+.ms-table tbody tr:hover{background:var(--bg);}
+.ms-table td{padding:11px 14px;color:var(--text);}
+.ms-table td:first-child{font-weight:500;}
+.ms-table .code-cell{font-size:12px;color:var(--text-muted);font-family:monospace;}
+
+.gbadge{display:inline-block;padding:2px 10px;border-radius:20px;font-weight:700;font-size:12px;}
+.g-A{background:#EAF3DE;color:#27500A;}
+.g-B{background:#E6F1FB;color:#0C447C;}
+.g-C{background:#FAEEDA;color:#633806;}
+.g-F{background:#FCEBEB;color:#791F1F;}
+
+.s-pass{color:var(--green);font-weight:600;}
+.s-fail{color:var(--red);font-weight:600;}
+
+.ms-footer{display:flex;align-items:flex-end;justify-content:space-between;padding-top:1.5rem;border-top:1px solid var(--border);margin-top:.25rem;}
+.footer-note{font-size:11px;color:var(--text-muted);line-height:1.6;}
+.footer-note strong{color:var(--text);font-weight:600;}
+.watermark-badge{display:flex;align-items:center;gap:8px;background:var(--green-light);border:1px solid #9FE1CB;border-radius:8px;padding:8px 14px;}
+.watermark-badge span{font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.06em;}
+
+.ms-bottom-bar{background:var(--navy);padding:.75rem 2.5rem;display:flex;justify-content:space-between;align-items:center;}
+.ms-bottom-bar p{font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.04em;}
+
+.hidden{display:none;}
+.fade-in{animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+@media print{
+  body{background:#fff;padding:0;}
+  .action-bar,.search-section{display:none!important;}
+  #marksheet{box-shadow:none;border:none;border-radius:0;}
+  .marksheet-wrap{margin:0;max-width:100%;}
+}
+@media(max-width:600px){
+  .ms-body{padding:1.25rem;}
+  .ms-head{padding:1.5rem 1.25rem 1.3rem;}
+  .info-grid{grid-template-columns:1fr 1fr;}
+  .ms-head-inner{gap:12px;}
+  .ms-board-name{font-size:16px;}
+  .action-bar{justify-content:stretch;}
+  .action-bar button{flex:1;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- SEARCH SECTION -->
+<div class="search-section" id="searchSection">
+  <div class="page-center">
+    <div class="logo-block">
+      <div class="crest">
+        <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="15" stroke-width="1.5"/>
+          <path d="M18 8v20M10 18h16M13 11l10 14M23 11L13 25" stroke-linecap="round" stroke-width="1.3"/>
+        </svg>
+      </div>
+      <h1>Bangladesh Technical<br/>Education Board</h1>
+      <p>Official Diploma Examination Result</p>
+    </div>
+
+    <div class="search-card">
+      <h2>Check Your Result</h2>
+
+      <div class="field-group">
+        <label>Board</label>
+        <select id="board">
+          <option value="">— Select your board —</option>
+          <option value="Dhaka">Dhaka</option>
+          <option value="Chittagong">Chittagong</option>
+          <option value="Rajshahi">Rajshahi</option>
+          <option value="Sylhet">Sylhet</option>
+          <option value="Barisal">Barisal</option>
+          <option value="Khulna">Khulna</option>
+          <option value="Mymensingh">Mymensingh</option>
+          <option value="Rangpur">Rangpur</option>
+          <option value="Comilla">Comilla</option>
+          <option value="Jessore">Jessore</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>Roll Number</label>
+        <input type="text" id="rollNo" placeholder="e.g. 651234" maxlength="12" inputmode="numeric" />
+      </div>
+
+      <button class="btn-check" id="checkBtn" onclick="doSearch()">Check Result</button>
+      <div class="err-box" id="errBox"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MARKSHEET SECTION -->
+<div class="marksheet-wrap hidden fade-in" id="marksheetSection">
+  <div class="action-bar">
+    <button class="btn-new" onclick="reset()">← New Search</button>
+    <button class="btn-dl" id="dlBtn" onclick="downloadMarksheet()">⬇ Download Marksheet</button>
+  </div>
+
+  <div id="marksheet">
+    <!-- HEAD -->
+    <div class="ms-head">
+      <div class="ms-head-inner">
+        <div class="ms-seal">
+          <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="18" r="15" stroke-width="1.5"/>
+            <path d="M18 8v20M10 18h16M13 11l10 14M23 11L13 25" stroke-linecap="round" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <div class="ms-head-text">
+          <div class="ms-board-name">Bangladesh Technical Education Board</div>
+          <div class="ms-doc-title">Ministry of Education, Government of Bangladesh</div>
+          <div class="ms-doc-label" id="msDocLabel">Diploma in Engineering — Result Marksheet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="ms-body">
+
+      <!-- Student Identity -->
+      <div class="student-band">
+        <div class="stu-avatar" id="msAvatar">RU</div>
+        <div>
+          <div class="stu-name" id="msStuName">Md. Rahim Uddin</div>
+          <div class="stu-sub" id="msStuSub">Roll: 651234 &nbsp;·&nbsp; Dhaka Polytechnic Institute &nbsp;·&nbsp; 5th Semester</div>
+        </div>
+      </div>
+
+      <!-- Info boxes -->
+      <div class="info-grid">
+        <div class="info-box"><div class="info-box-lbl">Roll Number</div><div class="info-box-val" id="iRoll">—</div></div>
+        <div class="info-box"><div class="info-box-lbl">Board</div><div class="info-box-val" id="iBoard">—</div></div>
+        <div class="info-box"><div class="info-box-lbl">Exam Year</div><div class="info-box-val" id="iYear">2024</div></div>
+        <div class="info-box"><div class="info-box-lbl">Semester</div><div class="info-box-val" id="iSem">5th Semester</div></div>
+        <div class="info-box"><div class="info-box-lbl">Session</div><div class="info-box-val" id="iSession">2019–20</div></div>
+        <div class="info-box"><div class="info-box-lbl">Institute</div><div class="info-box-val" id="iInstitute">Dhaka Poly.</div></div>
+      </div>
+
+      <!-- Summary strip -->
+      <div class="summary-strip">
+        <div class="metric-cell">
+          <div class="mc-label">GPA</div>
+          <div class="mc-val gpa" id="mGpa">3.65</div>
+          <div class="mc-sub">out of 4.00</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">Total Credit</div>
+          <div class="mc-val" id="mCredit">28.5</div>
+          <div class="mc-sub">credit hours</div>
+        </div>
+        <div class="metric-cell">
+          <div class="mc-label">Final Result</div>
+          <div class="mc-val pass" id="mResult">Passed</div>
+          <div class="mc-sub" id="mResultSub">All subjects cleared</div>
+        </div>
+      </div>
+
+      <!-- Subject table -->
+      <div class="section-title">Subject-wise Result</div>
+      <table class="ms-table">
+        <thead>
+          <tr>
+            <th style="width:36%">Subject Name</th>
+            <th>Code</th>
+            <th>Credit</th>
+            <th>Grade</th>
+            <th>Grade Point</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="msBody"></tbody>
+      </table>
+
+      <!-- Footer -->
+      <div class="ms-footer">
+        <div class="footer-note">
+          <strong>Verification:</strong> This marksheet is auto-generated from BTEB official data.<br/>
+          Published: <span id="pubDate">—</span> &nbsp;|&nbsp; Roll: <span id="pubRoll">—</span>
+        </div>
+        <div class="watermark-badge">
+          <span id="resultBadge">✓ PASSED</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ms-bottom-bar">
+      <p>Bangladesh Technical Education Board — bteb.gov.bd</p>
+      <p id="msFooterDate">Generated: —</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEMO = {
+  name:"Md. Rahim Uddin",
+  institute:"Dhaka Polytechnic Institute",
+  semester:"5th Semester",
+  session:"2019–20",
+  examYear:"2024",
+  examType:"Diploma in Engineering",
+  gpa:"3.65",
+  credit:"28.5",
+  passed:true,
+  subjects:[
+    {name:"Applied Mathematics-III",  code:"65811",credit:3,  grade:"A",  gp:4.00},
+    {name:"Digital Electronics",      code:"65821",credit:3.5,grade:"A",  gp:4.00},
+    {name:"Computer Networking",      code:"65831",credit:3,  grade:"B+", gp:3.50},
+    {name:"Database Management",      code:"65841",credit:3.5,grade:"A-", gp:3.75},
+    {name:"Web Technology",           code:"65851",credit:3,  grade:"B",  gp:3.25},
+    {name:"Industrial Management",    code:"65861",credit:3,  grade:"B+", gp:3.50},
+    {name:"Project Work",             code:"65871",credit:4,  grade:"A",  gp:4.00},
+    {name:"Industrial Training",      code:"65881",credit:5,  grade:"A",  gp:4.00},
+  ]
+};
+
+function gradeClass(g){
+  if(g.startsWith('A')) return 'g-A';
+  if(g.startsWith('B')) return 'g-B';
+  if(g.startsWith('C')) return 'g-C';
+  return 'g-F';
+}
+
+function initials(name){
+  return name.split(' ').filter(Boolean).slice(0,2).map(n=>n[0]).join('').toUpperCase();
+}
+
+function doSearch(){
+  const board = document.getElementById('board').value;
+  const roll = document.getElementById('rollNo').value.trim();
+  const err = document.getElementById('errBox');
+
+  err.style.display='none';
+  if(!board || !roll){
+    err.textContent='Please select your board and enter your roll number.';
+    err.style.display='block'; return;
+  }
+  if(!/^\d{5,12}$/.test(roll)){
+    err.textContent='Roll number must be 5–12 digits only.';
+    err.style.display='block'; return;
+  }
+
+  const btn=document.getElementById('checkBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-inline"></span>Searching result…';
+
+  setTimeout(()=>{
+    btn.disabled=false;
+    btn.innerHTML='Check Result';
+    renderMarksheet(board, roll);
+  }, 1600);
+}
+
+function renderMarksheet(board, roll){
+  const d = DEMO;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+  const timeStr = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+
+  document.getElementById('msDocLabel').textContent = d.examType + ' — Result Marksheet';
+  document.getElementById('msAvatar').textContent = initials(d.name);
+  document.getElementById('msStuName').textContent = d.name;
+  document.getElementById('msStuSub').innerHTML =
+    `Roll: <strong>${roll}</strong> &nbsp;·&nbsp; ${d.institute} &nbsp;·&nbsp; ${d.semester}`;
+
+  document.getElementById('iRoll').textContent     = roll;
+  document.getElementById('iBoard').textContent    = board;
+  document.getElementById('iYear').textContent     = d.examYear;
+  document.getElementById('iSem').textContent      = d.semester;
+  document.getElementById('iSession').textContent  = d.session;
+  document.getElementById('iInstitute').textContent= d.institute;
+
+  document.getElementById('mGpa').textContent      = d.gpa;
+  document.getElementById('mCredit').textContent   = d.credit;
+
+  const rEl = document.getElementById('mResult');
+  rEl.textContent = d.passed ? 'Passed' : 'Failed';
+  rEl.className = 'mc-val ' + (d.passed ? 'pass' : 'fail');
+  document.getElementById('mResultSub').textContent = d.passed ? 'All subjects cleared' : 'Has failed subject(s)';
+
+  const badge = document.getElementById('resultBadge');
+  badge.textContent = d.passed ? '✓ PASSED' : '✗ FAILED';
+  badge.closest('.watermark-badge').style.background = d.passed ? 'var(--green-light)' : '#FCEBEB';
+  badge.closest('.watermark-badge').style.borderColor = d.passed ? '#9FE1CB' : '#F7C1C1';
+  badge.style.color = d.passed ? 'var(--green)' : 'var(--red)';
+
+  document.getElementById('msBody').innerHTML = d.subjects.map(s=>`
+    <tr>
+      <td>${s.name}</td>
+      <td class="code-cell">${s.code}</td>
+      <td>${s.credit}</td>
+      <td><span class="gbadge ${gradeClass(s.grade)}">${s.grade}</span></td>
+      <td style="font-weight:600;">${s.gp.toFixed(2)}</td>
+      <td class="${s.gp>=2.0?'s-pass':'s-fail'}">${s.gp>=2.0?'Pass':'Fail'}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('pubDate').textContent  = dateStr;
+  document.getElementById('pubRoll').textContent  = roll;
+  document.getElementById('msFooterDate').textContent = `Generated: ${dateStr}, ${timeStr}`;
+
+  document.getElementById('searchSection').style.display='none';
+  const ms = document.getElementById('marksheetSection');
+  ms.classList.remove('hidden');
+  ms.scrollIntoView({behavior:'smooth'});
+}
+
+function reset(){
+  document.getElementById('marksheetSection').classList.add('hidden');
+  document.getElementById('searchSection').style.display='';
+  document.getElementById('rollNo').value='';
+  document.getElementById('board').value='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function downloadMarksheet(){
+  const btn = document.getElementById('dlBtn');
+  btn.disabled=true; btn.textContent='Preparing…';
+  try{
+    const el = document.getElementById('marksheet');
+    const canvas = await html2canvas(el,{
+      scale:2,useCORS:true,backgroundColor:'#ffffff',
+      windowWidth:800,scrollY:0,
+    });
+    const link=document.createElement('a');
+    link.download=`BTEB_Marksheet_${document.getElementById('iRoll').textContent}.png`;
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+  }catch(e){window.print();}
+  btn.disabled=false; btn.textContent='⬇ Download Marksheet';
+}
+
+document.getElementById('rollNo').addEventListener('keydown',e=>{
+  if(e.key==='Enter') doSearch();
+});
+</script>
+</body>
+</html>
